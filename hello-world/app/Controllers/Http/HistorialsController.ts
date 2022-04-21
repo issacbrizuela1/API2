@@ -8,7 +8,7 @@ import HC_SR04M from 'App/Models/HC_SR04'
 import MPU6050M from 'App/Models/MPU6050'
 import MotoresM from 'App/Models/Motores'
 import KY_031M from 'App/Models/KY_031'
-let URL = Env.get('MONGO_URL2')
+let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
 export default class HistorialsController {
   public async autoincrement() {
@@ -49,32 +49,12 @@ export default class HistorialsController {
   }
   //CREAR
   public async crearHistorial({ request, response }) {
-    /*
-    const datos = request.all()
-    const preb = (await mongo).model('historialsensores', schHistorial)
-    let idd = await this.autoincrement()
-    const id = (await idd) + 1
-    preb
-      .insertMany({
-        id: id,
-        idSensor: datos.idsensor,
-        Valor: datos.Valor,
-        Fechadecreacion: Date.now(),
-        Fechadeactualizacion: ''
-      })
-      .then((data) => {
-        console.log(data)
-        return data
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-      */
     const datos = request.all()
     let ultimo = this.autoincrement()
     let id = await ultimo + 1
     if(id==""||id==null||id=="NaN"||id==0){id+1}
     switch (datos.idSensor) {
+      /*
       case 1:
         await mongoose.connect(URL)
         response = new DHT11M.DHT11M({
@@ -189,17 +169,15 @@ export default class HistorialsController {
         response.save()
         return response
         break;
-
       default:
         return "sensor no encontrado\n revise que tenga agregado el sensor"
         break;
-    }
+    */
+      }
   }
   //editar
   public async updateHistorial({ params, request, response }: HttpContextContract) {
     const datos = request.all()
-    //let date = new Date()
-    //let [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()]
     const preb = (await mongo).model('historialsensores', schHistorial)
 
     preb

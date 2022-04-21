@@ -3,7 +3,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import SensorM from 'App/Models/Sensor'
 //import { DateTime, Zone } from 'luxon'
-let URL = Env.get('MONGO_URL2');
+let URL = Env.get('MONGO_URL');
 let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
 export default class SensorsController {
   //EXTRAS
@@ -42,31 +42,6 @@ export default class SensorsController {
       response=new SensorM.SensorM({datos})
      response.save()
      return response
-    /*
-    const datos = request.all()
-    const preb = (await mongo).model('sensores', schSensor)
-    let idventa = await this.autoincrement()
-    const id = (await idventa) + 1
-    preb
-      .insertMany({
-        idSensor: id,
-        idUsuario: datos.idUsuario,
-        NombreSensor: datos.NombreSensor,
-        Descripcion: datos.Descripcion,
-        Estado: datos.Estado,
-        GPIO: datos.GPIO,
-        IMG: datos.IMG,
-        Fechadecreacion: Date.now(),
-        Fechadeactualisacion: '',
-      })
-      .then((data) => {
-        return response.created
-        //console.log(data)
-      })
-      .catch((err) => {
-        return err
-      })
-      */
   }
   //mostrar
   public async getSensores({ request, response }: HttpContextContract) {
@@ -102,18 +77,5 @@ export default class SensorsController {
       .catch((err) => {
         return err
       })
-  }
-  //pruebas
-  public async pruebaslista() {
-    /*
-    let result = "{hola:1,xd:1}"
-    let pre = []
-    pre.push(result)
-    console.log(pre[0])
-    let s = typeof (pre[0])
-    console.log(s)
-    let prer=pre[0].split("}{,:")
-    console.log(prer)
-    */
   }
 }
