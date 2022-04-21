@@ -2,7 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import SensorM from 'App/Models/Sensor'
-//import { DateTime, Zone } from 'luxon'
+import schSensor from 'App/Models/scSensor';
 let URL = Env.get('MONGO_URL');
 let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
 export default class SensorsController {
@@ -34,20 +34,20 @@ export default class SensorsController {
   }
   //CREAR
   public async crearSensor({ request, response }) {
-    let datos=request.all()
-    await mongoose.connect(URL) 
-    let autoinc=this.autoincrementSEN()
-    let id=await autoinc+1
-    if (id=="NaN" || id==null){id+=1};
-      response=new SensorM.SensorM({datos})
-     response.save()
-     return response
-    
+    let datos = request.all()
+    await mongoose.connect(URL)
+    let autoinc = this.autoincrementSEN()
+    let id = await autoinc + 1
+    if (id == "NaN" || id == null) { id += 1 };
+    response = new SensorM.SensorM({ datos })
+    response.save()
+    return response
+
   }
   //mostrar
   public async getSensores({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    response=await  SensorM.SensorM.find({})
+    response = await SensorM.SensorM.find({})
     return response
   }
   //editar
@@ -56,7 +56,7 @@ export default class SensorsController {
     const datos = request.all()
     const preb = SensorM.SensorM
     preb
-      .updateOne({ idSensor: params.id }, {datos})
+      .updateOne({ idSensor: params.id }, { datos })
       .then((data) => {
         //console.log(data)
         return response.ok
@@ -78,5 +78,53 @@ export default class SensorsController {
       .catch((err) => {
         return err
       })
+  }
+  //verificar que sennsor pertenese al usuario
+  public async verificarsensor({ request, response }) {
+    try {
+      const datos = request.all()
+      const preb = (await mongo).model('sensores', schSensor)
+      preb
+        .aggregate([{
+          $lookup: {
+            from: 'sensores',
+            localField: 'idSensor',
+            foreignField: 'idSensor',
+            as: 'sensores'
+          }
+        }, {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: [
+                {
+                  $arrayElemAt: [
+                    '$sensores',
+                    0
+                  ]
+                },
+                '$$ROOT'
+              ]
+            }
+          }
+        }, {
+          $project: {
+            sensores: 0
+          }
+        }, {
+          $match: {
+            idUsuario: 1
+          }
+        }])
+        .then((data) => {
+          console.log("datos:\n" + data)
+          return data
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+    catch (error) {
+      return error
+    }
   }
 }

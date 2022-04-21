@@ -32,8 +32,13 @@ Route.group(() => {
   Route.put('updateSensores/:id', 'SensorsController.updateSensores')
   Route.delete('eliminarSensores/:id', 'SensorsController.deleteSensor')
   Route.get('Sensoresincrement', 'SensorsController.autoincrementSEN')
+  Route.get('verificarsensor', 'SensorsController.verificarsensor')
+  
+
+
 //HISTORIAL
   Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
+  Route.get('historialverificarsensor', 'HistorialsController.verificarsensorhistorial')
 
   
   
@@ -41,10 +46,9 @@ Route.group(() => {
   Route.get('pruebaslista', 'SensorsController.pruebaslista')
 
 
-  //Dht11
+  //sensores
   Route.post('insertarDHT11', 'Dht11sController.insertarDHT11')
   Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')
   Route.post('insertarKy_031', 'Ky_031sController.insertarKy_031')
   Route.post('insertarMotores', 'MotoresController.insertarMotores')
   Route.post('insertarMPU6050', 'Mpu6050sController.insertarMPU6050')
-  
