@@ -21,9 +21,6 @@ Route.group(() => {
 
   //AUTH-HISTORIAL
   Route.get('smostrarHistorial', 'HistorialsController.getHistorial')
-  Route.post('screarHistorial', 'HistorialsController.crearHistorial')
-  Route.put('supdateHistorial/:id', 'HistorialsController.updateHistorial')
-  Route.delete('sdeleteHistorial/:id', 'HistorialsController.deleteSensor')
 }).middleware('auth')
 
 //LOGIN
@@ -37,9 +34,6 @@ Route.group(() => {
   Route.get('Sensoresincrement', 'SensorsController.autoincrementSEN')
 //HISTORIAL
   Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
-  Route.post('crearHistorial', 'HistorialsController.crearHistorial')
-  Route.put('updateHistorial/:id', 'HistorialsController.updateHistorial')
-  Route.delete('deleteHistorial/:id', 'HistorialsController.deleteSensor')
 
   
   
@@ -47,6 +41,10 @@ Route.group(() => {
   Route.get('pruebaslista', 'SensorsController.pruebaslista')
 
 
-  //PRUEBAS CON LOS CAMBIOS EN HISTORIAL
-  Route.post('insertarDHT11', 'HistorialsController.insertarDHT11')
-  Route.post('historialagg', 'HistorialsController.autoincrement')
+  //Dht11
+  Route.post('insertarDHT11', 'Dht11sController.insertarDHT11')
+  Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')
+  Route.post('insertarKy_031', 'Ky_031sController.insertarKy_031')
+  Route.post('insertarMotores', 'MotoresController.insertarMotores')
+  Route.post('insertarMPU6050', 'Mpu6050sController.insertarMPU6050')
+  

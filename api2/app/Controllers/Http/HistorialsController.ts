@@ -2,10 +2,20 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
-import schHistorial from 'App/Models/Historial'
+import schHistorial from 'App/Models/Historial';
+//import schHistorial from 'App/Models/Historial'
+//import DHT11M from 'App/Models/DHT11'
+/*
+import HC_SR04M from 'App/Models/HC_SR04'
+import MPU6050M from 'App/Models/MPU6050'
+import MotoresM from 'App/Models/Motores'
+import KY_031M from 'App/Models/KY_031'
+*/
+
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
 export default class HistorialsController {
+  /*
   public async autoincrement() {
     try {
       const preb = (await mongo).model('historialsensores', schHistorial)
@@ -16,34 +26,20 @@ export default class HistorialsController {
         }
       }, {
         $sort: {
-          idH: 1
+          idH: -1
         }
       }, { $limit: 1 }])
       let res
       s.forEach((element) => {
-        res = element.id
-        console.log(res)
+        res = element.idH
       })
       return res
     } catch (error) {
       return error
     }
   }
-  //mostrar
-  public async getHistorial({ request }: HttpContextContract) {
-    let datos = request.all()
-    const preb = (await mongo).model('historialsensores', schHistorial)
-    const buscar = preb
-      .find({ 'idUsuario': datos.idUsuario, })
-      .then((schHistorial) => {
-        return schHistorial
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    return buscar
-  }
   //CREAR
+  
   public async crearHistorial({ request, response }) {
 
     const datos = request.all()
@@ -66,7 +62,7 @@ export default class HistorialsController {
         console.log(err)
       })
 
-    /*
+  
    const datos = request.all()
    let ultimo = this.autoincrement()
    let id = await ultimo + 1
@@ -191,14 +187,15 @@ export default class HistorialsController {
        return "sensor no encontrado\n revise que tenga agregado el sensor"
        break;
    }
-   */
+   
   }
+  
   //editar
   public async updateHistorial({ params, request, response }: HttpContextContract) {
     const datos = request.all()
     //let date = new Date()
     //let [month, day, year] = [date.getMonth(), date.getDate(), date.getFullYear()]
-    const preb = (await mongo).model('historialsensores', schHistorial)
+    const preb = (await mongo).model('historialsensores', )
 
     preb
       .updateOne({ id: params.id }, {
@@ -216,7 +213,7 @@ export default class HistorialsController {
   //eliminar
   public async deleteSensor({ params, response }: HttpContextContract) {
 
-    const preb = (await mongo).model('historialsensores', schHistorial)
+    const preb = (await mongo).model('historialsensores', )
     preb
       .deleteOne({ id: params.id })
       .then((data) => {
@@ -227,28 +224,19 @@ export default class HistorialsController {
         return err
       })
   }
-  /*
-  public async insertarDHT({ request, response }) {
-    let datos=request.all()
-    await mongoose.connect(URL)
-    let idd = await this.autoincrement()
-    const id = (await idd) + 1
-    response = new DHT11M.DHT11M({
-      idH: 2,
-      idRU: datos.idRU,
-      idSensor: 1,
-      Temperatura:  datos.Temperatura,
-      Humedad: datos.Humedad,
-      Fechacreacion: Date.now()
-    }).then((data) => {
-      console.log(data)
-      return data
-    })
+  */
+  //mostrar
+  public async getHistorial({ request }: HttpContextContract) {
+    let datos = request.all()
+    const preb = (await mongo).model('historialsensores', schHistorial)
+    const buscar = preb
+      .find()
+      .then((schHistorial) => {
+        return schHistorial
+      })
       .catch((err) => {
         console.log(err)
       })
-    response.save()
-    return response
+    return buscar
   }
-*/
 }

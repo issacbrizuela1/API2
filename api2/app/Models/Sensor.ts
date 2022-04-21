@@ -13,15 +13,3 @@ export default class SensorM{
 });
 static SensorM:any=model('sensores',this.schSensor);
 }
-  /*
-  self.idSensor = 0
-  self.idUsuario = 0
-  self.NombreSensor = 
-  self.Descripcion = 
-  self.Fechadecreacion = 
-  self.Fechadeactualisacion = 
-  self.Estados = [indefinido, habilitado, deshabilitado]
-  self.Estado = self.Estados[0]
-  self.GPIO = list()
-  self.IMG = 
-  */
