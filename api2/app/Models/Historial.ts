@@ -4,7 +4,7 @@ import mongoose, { Schema } from 'mongoose';
 const schHistorial=new Schema({
   id: Number,
   idSensor: Number,
-  Valor: Object,
+  Valor: Array,
   Fechadecreacion: Date,
   Fechadeactualizacion: Date
 });

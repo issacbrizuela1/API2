@@ -45,3 +45,8 @@ Route.group(() => {
   
   Route.get('revisarToken', 'AuthController.VerificarToken')
   Route.get('pruebaslista', 'SensorsController.pruebaslista')
+
+
+  //PRUEBAS CON LOS CAMBIOS EN HISTORIAL
+  Route.post('insertarDHT11', 'HistorialsController.insertarDHT11')
+  Route.post('historialagg', 'HistorialsController.autoincrement')
