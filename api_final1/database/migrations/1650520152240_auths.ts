@@ -8,15 +8,15 @@ export default class AuthsSchema extends BaseSchema {
       table.increments('id').primary()
       table.string('email', 255).notNullable()
       table.string('username', 255).notNullable()
-      table.string('password', 180).notNullable()
       table.enu('tipo_usuario', ['usuario', 'administrador'])
+      table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */
        table.timestamp('created_at').notNullable().defaultTo(this.now())
-       table.timestamp('updated_at').nullable()
+      table.timestamp('updated_at').nullable()
     })
   }
 
