@@ -7,6 +7,12 @@ export default class auth extends BaseModel {
   public id: number
 
   @column()
+  public username: string
+
+  @column()
+  public tipo_usuario: any
+
+  @column()
   public email: string
 
   @column({ serializeAs: null })
