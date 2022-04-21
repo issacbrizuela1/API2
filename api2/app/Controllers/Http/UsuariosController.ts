@@ -84,4 +84,31 @@ export default class UsuariosController {
                 return err
             })
     }
+
+    
 }
+/*
+[{$lookup: {
+ from: 'sensores',
+ localField: 'idSensor',
+ foreignField: 'idSensor',
+ as: 'sensores'
+}}, {$replaceRoot: {
+ newRoot: {
+  $mergeObjects: [
+   {
+    $arrayElemAt: [
+     '$sensores',
+     0
+    ]
+   },
+   '$$ROOT'
+  ]
+ }
+}}, {$project: {
+ sensores: 0
+}}, {$match: {
+ idUsuario: 1
+}}]
+
+*/

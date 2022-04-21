@@ -3,6 +3,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import SensorM from 'App/Models/Sensor'
 import schSensor from 'App/Models/scSensor';
+import schSensorusuario from 'App/Models/scSensorUsuario';
 let URL = Env.get('MONGO_URL');
 let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
 export default class SensorsController {
@@ -80,51 +81,45 @@ export default class SensorsController {
       })
   }
   //verificar que sennsor pertenese al usuario
-  public async verificarsensor({ request, response }) {
+  public async sensoresquetieneelusuario({ request, response }) {
     try {
-      const datos = request.all()
-      const preb = (await mongo).model('sensores', schSensor)
-      preb
-        .aggregate([{
-          $lookup: {
-            from: 'sensores',
-            localField: 'idSensor',
-            foreignField: 'idSensor',
-            as: 'sensores'
+
+      let datos = request.all()
+      const preb = (await mongo).model('sensoresusuarios', schSensorusuario)
+      const buscar = preb
+        .aggregate([{$lookup: {
+          from: 'sensores',
+          localField: 'idSensor',
+          foreignField: 'idSensor',
+          as: 'sensores'
+         }}, {$replaceRoot: {
+          newRoot: {
+           $mergeObjects: [
+            {
+             $arrayElemAt: [
+              '$sensores',
+              0
+             ]
+            },
+            '$$ROOT'
+           ]
           }
-        }, {
-          $replaceRoot: {
-            newRoot: {
-              $mergeObjects: [
-                {
-                  $arrayElemAt: [
-                    '$sensores',
-                    0
-                  ]
-                },
-                '$$ROOT'
-              ]
-            }
-          }
-        }, {
-          $project: {
-            sensores: 0
-          }
-        }, {
-          $match: {
-            idUsuario: 1
-          }
-        }])
-        .then((data) => {
-          console.log("datos:\n" + data)
-          return data
+         }}, {$project: {
+          sensores: 0
+         }}, {$match: {
+          idUsuario: 1
+         }}])
+        .then((schSensorusuario) => {
+          return schSensorusuario
         })
         .catch((err) => {
           console.log(err)
         })
+      return buscar
     }
     catch (error) {
       return error
     }
   }
+  
 }
