@@ -1,3 +1,4 @@
+// import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
@@ -48,6 +49,28 @@ export default class HistorialsController {
   }
   //CREAR
   public async crearHistorial({ request, response }) {
+    
+    const datos = request.all()
+    const preb = (await mongo).model('historialsensores', schHistorial)
+    let idd = await this.autoincrement()
+    const id = (await idd) + 1
+    preb
+      .insertMany({
+        id: id,
+        idSensor: datos.idsensor,
+        Valor: datos.Valor,
+        Fechadecreacion: Date.now(),
+        Fechadeactualizacion: ''
+      })
+      .then((data) => {
+        console.log(data)
+        return data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      
+     /*
     const datos = request.all()
     let ultimo = this.autoincrement()
     let id = await ultimo + 1
@@ -172,6 +195,7 @@ export default class HistorialsController {
         return "sensor no encontrado\n revise que tenga agregado el sensor"
         break;
     }
+    */
   }
   //editar
   public async updateHistorial({ params, request, response }: HttpContextContract) {
