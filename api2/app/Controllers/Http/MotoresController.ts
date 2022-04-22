@@ -9,7 +9,7 @@ let mongo = mongoose.connect(URL);
 export default class MotoresController {
     public async autoincrement() {
         try {
-            const preb = (await mongo).model('historialsensores', schMotores)
+            const preb =await mongoose.createConnection(URL).model('historialsensores', schMotores)
             let s = await preb.aggregate([{
                 $project: {
                     idH: 1,
@@ -31,7 +31,7 @@ export default class MotoresController {
     }
     public async insertarMotores({ request, response }) {
         const datos = request.all()
-        const preb = (await mongo).model('historialsensores', schMotores)
+        const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores)
         let idd = await this.autoincrement()
         let id = (await idd) + 1
         if (id == "" || id == null || id == "Nan" || id == 0 || id == undefined) { id += 1 }

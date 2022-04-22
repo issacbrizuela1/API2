@@ -51,7 +51,8 @@ export default class UsuariosController {
     //mostrar
     public async getusuarioSensores({ request, response }: HttpContextContract) {
         //poner filtro para usuario logueado
-        response = await SensorUsuarioM.SensorUsuarioM.find({})
+        let datos = request.all()
+        response = await SensorUsuarioM.SensorUsuarioM.find({idUsuario:datos.idUsuario})
         return response
     }
     //editar

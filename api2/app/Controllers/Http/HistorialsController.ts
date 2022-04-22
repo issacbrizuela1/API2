@@ -24,7 +24,7 @@ export default class HistorialsController {
   //verificar que sennsor pertenese al usuario
   public async ultimoregistrofiltro({ request }: HttpContextContract) {
     let datos = request.all()
-    const preb = (await mongo).model('historialsensores', schHistorial)
+    const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial)
     const buscar = preb
       .aggregate([{$lookup: {
         from: 'sensoresusuarios',

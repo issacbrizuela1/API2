@@ -87,7 +87,7 @@ export default class SensorsController {
 
       const datos = params.id
       let resultado:any=[]
-      const preb = (await mongo).model('sensoresusuarios', schSensorusuario)
+      const preb = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario)
       const buscar =await preb
         .aggregate([{
           $lookup: {

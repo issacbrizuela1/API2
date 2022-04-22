@@ -37,7 +37,6 @@ Route.post('crearSensores', 'SensorsController.crearSensor')
 //Route.put('updateSensores/:id', 'SensorsController.updateSensores')
 //Route.delete('eliminarSensores/:id', 'SensorsController.deleteSensor')
 Route.get('Sensoresincrement', 'SensorsController.autoincrementSEN')
-Route.get('verificarsensor', 'SensorsController.verificarsensor')
 Route.get('misSensores/:id', 'SensorsController.sensoresquetieneelusuario')
 
 

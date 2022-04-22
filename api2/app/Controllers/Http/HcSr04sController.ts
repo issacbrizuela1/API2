@@ -7,7 +7,7 @@ let mongo = mongoose.connect(URL);
 export default class HcSr04sController {
     public async autoincrement() {
         try {
-            const preb = (await mongo).model('historialsensores', schHC_SR04)
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schHC_SR04)
             let s = await preb.aggregate([{
                 $project: {
                     idH: 1,
@@ -28,10 +28,8 @@ export default class HcSr04sController {
         }
     }
     public async insertarHcSr04({ request, response }) {
-
-
         const datos = request.all()
-        const preb = (await mongo).model('historialsensores', schHC_SR04)
+        const preb = await mongoose.createConnection(URL).model('historialsensores', schHC_SR04)
         let idd = await this.autoincrement()
         let id = (await idd) + 1
         if (id == "" || id == null || id == "Nan" || id == 0 || id == undefined) { id += 1 }
@@ -40,7 +38,7 @@ export default class HcSr04sController {
                 idH: id,
                 idRU: datos.idRU,
                 idSensor: 2,
-                Distacia:datos.Distacia,
+                Distacia: datos.Distacia,
                 Fechacreacion: Date.now()
             })
             .then((data) => {

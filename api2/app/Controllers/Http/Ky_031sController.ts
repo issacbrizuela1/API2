@@ -8,7 +8,7 @@ let mongo = mongoose.connect(URL);
 export default class Ky_031sController {
     public async autoincrement() {
         try {
-            const preb = (await mongo).model('historialsensores', schKY_031)
+            const preb = mongoose.createConnection(URL).model('historialsensores', schKY_031)
             let s = await preb.aggregate([{
                 $project: {
                     idH: 1,
