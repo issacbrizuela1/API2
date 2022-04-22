@@ -45,7 +45,7 @@ Route.get('misSensores/:id', 'SensorsController.sensoresquetieneelusuario')
 
 //HISTORIAL
 Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
-Route.get('filtroultimoregistro', 'HistorialsController.ultimoregistrofiltro')
+Route.get('filtroultimoregistro/:idUsuario/:idSensor', 'HistorialsController.ultimoregistrofiltro')
 
 
 
