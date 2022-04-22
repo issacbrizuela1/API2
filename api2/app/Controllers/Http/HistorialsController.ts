@@ -23,5 +23,44 @@ export default class HistorialsController {
     return buscar
   }
   //verificar que sennsor pertenese al usuario
-  
+  public async ultimoregistrofiltro({ request }: HttpContextContract) {
+    let datos = request.all()
+    const preb = (await mongo).model('historialsensores', schHistorial)
+    const buscar = preb
+      .aggregate([{$lookup: {
+        from: 'sensoresusuarios',
+        localField: 'idRU',
+        foreignField: 'idRU',
+        as: 'rusensor'
+       }}, {$replaceRoot: {
+        newRoot: {
+         $mergeObjects: [
+          {
+           $arrayElemAt: [
+            '$rusensor',
+            0
+           ]
+          },
+          '$$ROOT'
+         ]
+        }
+       }}, {$unwind: {
+        path: '$rusensor',
+        preserveNullAndEmptyArrays: false
+       }}, {$match: {
+        idUsuario: 1,
+        idSensor: 1
+       }}, {$project: {
+        rusensor: 0
+       }}, {$sort: {
+        idH: -1
+       }}, {$limit: 1}])
+      .then((schHistorial) => {
+        return schHistorial
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    return buscar
+  }
 }
