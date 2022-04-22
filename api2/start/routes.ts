@@ -24,22 +24,37 @@ Route.group(() => {
 }).middleware('auth')
 
 //LOGIN
+Route.get('revisarToken', 'AuthController.VerificarToken')
+Route.get('pruebaslista', 'SensorsController.pruebaslista')
 Route.post('Login', 'AuthController.Login')
 Route.post('Register', 'AuthController.register')
+
+
+
 //SENSORES 
 Route.get('mostrarSensores', 'SensorsController.getSensores')
 Route.post('crearSensores', 'SensorsController.crearSensor')
-Route.put('updateSensores/:id', 'SensorsController.updateSensores')
-Route.delete('eliminarSensores/:id', 'SensorsController.deleteSensor')
+//Route.put('updateSensores/:id', 'SensorsController.updateSensores')
+//Route.delete('eliminarSensores/:id', 'SensorsController.deleteSensor')
 Route.get('Sensoresincrement', 'SensorsController.autoincrementSEN')
 Route.get('verificarsensor', 'SensorsController.verificarsensor')
-Route.get('misSensores', 'SensorsController.sensoresquetieneelusuario')
+Route.get('misSensores/:id', 'SensorsController.sensoresquetieneelusuario')
+
+
+
+
+
 //HISTORIAL
 Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
 Route.get('filtroultimoregistro', 'HistorialsController.ultimoregistrofiltro')
-//LOGIN
-Route.get('revisarToken', 'AuthController.VerificarToken')
-Route.get('pruebaslista', 'SensorsController.pruebaslista')
+
+
+
+
+
+
+
+
 //sensores
 Route.post('insertarDHT11', 'Dht11sController.insertarDHT11')
 Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')

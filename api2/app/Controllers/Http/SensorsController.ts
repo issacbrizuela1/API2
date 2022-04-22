@@ -81,45 +81,55 @@ export default class SensorsController {
       })
   }
   //verificar que sennsor pertenese al usuario
-  public async sensoresquetieneelusuario({ request, response }) {
+  public async sensoresquetieneelusuario({ params, request, response }: HttpContextContract) {
+
     try {
 
-      let datos = request.all()
+      const datos = params.id
+      let resultado:any=[]
       const preb = (await mongo).model('sensoresusuarios', schSensorusuario)
-      const buscar = preb
-        .aggregate([{$lookup: {
-          from: 'sensores',
-          localField: 'idSensor',
-          foreignField: 'idSensor',
-          as: 'sensores'
-         }}, {$replaceRoot: {
-          newRoot: {
-           $mergeObjects: [
-            {
-             $arrayElemAt: [
-              '$sensores',
-              0
-             ]
-            },
-            '$$ROOT'
-           ]
+      const buscar =await preb
+        .aggregate([{
+          $lookup: {
+            from: 'sensores',
+            localField: 'idSensor',
+            foreignField: 'idSensor',
+            as: 'sensores'
           }
-         }}, {$project: {
-          sensores: 0
-         }}, {$match: {
-          idUsuario: 1
-         }}])
-        .then((schSensorusuario) => {
-          return schSensorusuario
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-      return buscar
+        }, {
+          $replaceRoot: {
+            newRoot: {
+              $mergeObjects: [
+                {
+                  $arrayElemAt: [
+                    '$sensores',
+                    0
+                  ]
+                },
+                '$$ROOT'
+              ]
+            }
+          }
+        }, {
+          $project: {
+            sensores: 0
+          }
+        }]).exec().then((data) => {
+          data.forEach(element => {
+            if(element.idUsuario==datos)
+            {
+              //console.log(element.idUsuario)
+              resultado.push(element)
+            }
+          });//console.log(resultado)
+        }).catch((err) => {
+          console.error(err);
+        });
+      return resultado
     }
     catch (error) {
       return error
     }
   }
-  
+
 }
