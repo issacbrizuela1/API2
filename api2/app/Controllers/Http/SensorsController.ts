@@ -49,7 +49,7 @@ export default class SensorsController {
   public async getSensores({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
     response = await SensorM.SensorM.find({})
-    return response
+    return {men:"hola",dat:response}
   }
   //editar
   public async updateSensores({ params, request, response }: HttpContextContract) {

@@ -22,60 +22,7 @@ export default class HistorialsController {
     return preb
   }
   //verificar que sennsor pertenese al usuario
-  public async ultimoregistrofiltro2({ params }: HttpContextContract) {
-    //let datos = request.all()
-    const idUsuario = params.idUsuario
-    const idSensor = params.idSensor
-    let resultado: any = []
-    const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial)
-    var buscar = preb
-      .aggregate([{
-        $lookup: {
-          from: 'sensoresusuarios',
-          localField: 'idRU',
-          foreignField: 'idRU',
-          as: 'rusensor'
-        }
-      }, {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: [
-              {
-                $arrayElemAt: [
-                  '$rusensor',
-                  0
-                ]
-              },
-              '$$ROOT'
-            ]
-          }
-        }
-      }, {
-        $unwind: {
-          path: '$rusensor',
-          preserveNullAndEmptyArrays: false
-        }
-      }, {
-        $project: {
-          rusensor: 0
-        }
-      }, {
-        $sort: {
-          idH: -1
-        }
-      }]).exec().then((data) => {
-        data.forEach(element => {
-
-          if (element.idUsuario == idUsuario && element.idSensor == idSensor) {
-            resultado.push(element)
-          }
-        }); console.log(resultado)
-       buscar=resultado
-      }).catch((err) => {
-        console.error(err);
-      });
-      return buscar
-  }
+  
   public async ultimoregistrofiltro({ params }: HttpContextContract) {
     try {
 
