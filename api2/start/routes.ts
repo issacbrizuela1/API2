@@ -12,6 +12,7 @@ Route.group(() => {
   Route.get('srevisarToken', 'AuthController.VerificarToken')
   Route.get('straerUsuario', 'AuthController.getUser')
   Route.post('scerrarSesion', 'AuthController.Logout')
+  Route.get('idusuario', 'AuthController.idusuario')
 //SENSORES 
 Route.get('smostrarSensores', 'SensorsController.getSensores')
 Route.get('smostrarSensoress', 'SensorsController.getSensoress')
@@ -23,6 +24,7 @@ Route.get('smisSensores/:id', 'SensorsController.sensoresquetieneelusuario')
 //HISTORIAL
 Route.get('smostrarHistorial', 'HistorialsController.getHistorial')
 Route.get('sfiltroultimoregistro/:idUsuario/:idSensor', 'HistorialsController.ultimoregistrofiltro')
+Route.get('historialbyuser/:id', 'HistorialsController.getHistorialbyid')
 //sensores-insercion
 Route.post('sinsertarDHT11', 'Dht11sController.insertarDHT11')
 Route.post('sinsertarHcSr04', 'HcSr04sController.insertarHcSr04')

@@ -52,4 +52,9 @@ export default class AuthController {
     const user = auth.use('api').user.$attributes
     return user
   }
+  public async idusuario({ auth }) {
+    await auth.use('api').authenticate()
+    const user = auth.use('api').user.$attributes
+    return user['id']
+  }
 }
