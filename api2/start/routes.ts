@@ -14,6 +14,7 @@ Route.group(() => {
   Route.post('scerrarSesion', 'AuthController.Logout')
 //SENSORES 
 Route.get('smostrarSensores', 'SensorsController.getSensores')
+Route.get('smostrarSensoress', 'SensorsController.getSensoress')
 Route.post('screarSensores', 'SensorsController.crearSensor')
 //Route.put('updateSensores/:id', 'SensorsController.updateSensores')
 //Route.delete('eliminarSensores/:id', 'SensorsController.deleteSensor')
