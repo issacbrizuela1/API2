@@ -23,7 +23,7 @@ export default class SensorsController {
           },
         },
         { $limit: 1 },
-      ])
+      ]).exec()
       let res
       s.forEach((element) => {
         res = element.idSensor
@@ -35,7 +35,7 @@ export default class SensorsController {
   }
   //CREAR
   public async crearSensor({ request, response }) {
-    let datos = request.all()
+    const datos = request.all()
     await mongoose.connect(URL)
     let autoinc = this.autoincrementSEN()
     let id = await autoinc + 1
@@ -46,26 +46,26 @@ export default class SensorsController {
 
   }
   //mostrar
-  public async getSensoresusuario({ request, response }: HttpContextContract) {
+  public async getSensoresusuario() {
     //poner filtro para usuario logueado
-    response = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
-    return response
+    const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
+    return resp
     
   }
   //mostrar
-  public async getSensoresA({ request, response }: HttpContextContract) {
+  public async getSensoresA({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    response = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
+    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
     return {
       status:true,
       message:"Se trajo los datos correctamente",
-      data:response
+      data:resp
     }
   }
-  public async getSensores({ request, response }: HttpContextContract) {
+  public async getSensores({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    response = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
-    return response
+    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
+    return resp
     
   }
   //verificar que sennsor pertenese al usuario

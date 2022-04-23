@@ -40,9 +40,7 @@ export default class HistorialsController {
       const idUsuario = params.idUsuario
       const idSensor = params.idSensor
       let resultado:any=[]
-      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial)
-      const buscar =await preb
-        .aggregate([{$lookup: {
+      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{$lookup: {
           from: 'sensoresusuarios',
           localField: 'idRU',
           foreignField: 'idRU',
