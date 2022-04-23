@@ -22,15 +22,50 @@ export default class HistorialsController {
     return preb
   }
   public async getHistorialbyid({ params,request }: HttpContextContract) {
-    let datos = request.all()
-    const preb = HistorialM.HistorialM.find({idUsuario:params.idUsuario})
-      .then((schHistorial) => {
-        return schHistorial
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    return preb
+    try {
+
+      const idUsuario = params.id
+      let resultado:any=[]
+      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{$lookup: {
+        from: 'sensoresusuarios',
+        localField: 'idRU',
+        foreignField: 'idRU',
+        as: 'rusensor'
+       }}, {$replaceRoot: {
+        newRoot: {
+         $mergeObjects: [
+          {
+           $arrayElemAt: [
+            '$rusensor',
+            0
+           ]
+          },
+          '$$ROOT'
+         ]
+        }
+       }}, {$unwind: {
+        path: '$rusensor',
+        preserveNullAndEmptyArrays: false
+       }}, {$project: {
+        rusensor: 0
+       }}, {$sort: {
+        idH: -1
+       }}]).exec().then((data) => {
+          data.forEach(element => {
+            if(element.idUsuario == idUsuario)
+            {
+              resultado.push(element)
+            }
+           
+          });
+        }).catch((err) => {
+          console.error(err);
+        });
+        return resultado
+    }
+    catch (error) {
+      return error
+    }
   }
   //verificar que sennsor pertenese al usuario
   
