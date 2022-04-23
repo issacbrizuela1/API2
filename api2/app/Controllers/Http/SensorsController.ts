@@ -46,49 +46,27 @@ export default class SensorsController {
 
   }
   //mostrar
-  public async getSensores({ request, response }: HttpContextContract) {
+  public async getSensoresusuario({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
     response = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
-    return{
+    return response
+    
+  }
+  //mostrar
+  public async getSensoresA({ request, response }: HttpContextContract) {
+    //poner filtro para usuario logueado
+    response = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
+    return {
       status:true,
       message:"Se trajo los datos correctamente",
       data:response
     }
   }
-  //mostrar
-  public async getSensoress({ request, response }: HttpContextContract) {
+  public async getSensores({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
     response = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
     return response
-  }
-  //editar
-  public async updateSensores({ params, request, response }: HttpContextContract) {
-
-    const datos = request.all()
-    const preb = SensorM.SensorM
-    preb
-      .updateOne({ idSensor: params.id }, { datos })
-      .then((data) => {
-        //console.log(data)
-        return response.ok
-      })
-      .catch((err) => {
-        return err
-      })
-  }
-  //eliminar
-  public async deleteSensor({ params, request, response }: HttpContextContract) {
-    // const datos = request.all()
-    const preb = SensorM.SensorM
-    preb
-      .deleteOne({ idSensor: params.id })
-      .then((data) => {
-        return response.finished
-        //console.log(data)
-      })
-      .catch((err) => {
-        return err
-      })
+    
   }
   //verificar que sennsor pertenese al usuario
   public async sensoresquetieneelusuario({ params, request, response }: HttpContextContract) {
