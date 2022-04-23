@@ -48,13 +48,17 @@ export default class SensorsController {
   //mostrar
   public async getSensores({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    response = await SensorM.SensorM.find({})
-    return {men:"hola",dat:response}
+    response = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
+    return{
+      status:true,
+      message:"Se trajo los datos correctamente",
+      data:response
+    }
   }
   //mostrar
   public async getSensoress({ request, response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    response = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
+    response = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
     return response
   }
   //editar
