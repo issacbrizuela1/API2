@@ -25,7 +25,7 @@ Route.get('smisSensores/:id', 'SensorsController.sensoresquetieneelusuario')
 //HISTORIAL
 Route.get('smostrarHistorial', 'HistorialsController.getHistorial')
 Route.get('sfiltroultimoregistro/:idUsuario/:idSensor', 'HistorialsController.ultimoregistrofiltro')
-Route.get('shistorialbyuser/:id', 'HistorialsController.getHistorialbyid')
+Route.get('shistorialbyuser/:id', 'UsuariohistorialsController.getHistorialbyid')
 //sensores-insercion
 Route.post('sinsertarDHT11', 'Dht11sController.insertarDHT11')
 Route.post('sinsertarHcSr04', 'HcSr04sController.insertarHcSr04')
@@ -50,7 +50,7 @@ Route.get('misSensores/:id', 'SensorsController.sensoresquetieneelusuario')
 //HISTORIAL
 Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
 Route.get('filtroultimoregistro/:idUsuario/:idSensor', 'HistorialsController.ultimoregistrofiltro')
-Route.get('historialbyuser/:id', 'HistorialsController.getHistorialbyid')
+Route.get('historialbyuser/:id', 'UsuariohistorialsController.getHistorialbyid')
 //sensores
 Route.post('insertarDHT11', 'Dht11sController.insertarDHT11')
 Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')

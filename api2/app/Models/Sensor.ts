@@ -11,5 +11,5 @@ export default class SensorM{
 },{
   versionKey:false
 });
-static SensorM:any=model('sensores',this.schSensor);
+static SensorM:any= model('sensores',this.schSensor);
 }

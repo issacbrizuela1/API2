@@ -48,14 +48,14 @@ export default class SensorsController {
   //mostrar
   public async getSensoresusuario() {
     //poner filtro para usuario logueado
-    const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({})
+    const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({}).exec()
     return resp
     
   }
   //mostrar
   public async getSensoresA({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
+    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({}).exec()
     return {
       status:true,
       message:"Se trajo los datos correctamente",
@@ -64,7 +64,7 @@ export default class SensorsController {
   }
   public async getSensores({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({})
+    const resp = SensorM.SensorM.find({}).exec()
     return resp
     
   }
@@ -75,9 +75,7 @@ export default class SensorsController {
 
       const datos = params.id
       let resultado:any=[]
-      const preb = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario)
-      const buscar =await preb
-        .aggregate([{
+      const preb = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).aggregate([{
           $lookup: {
             from: 'sensores',
             localField: 'idSensor',
