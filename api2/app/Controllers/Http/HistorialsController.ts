@@ -21,50 +21,86 @@ export default class HistorialsController {
       })
     return preb
   }
-  
+
   //verificar que sennsor pertenese al usuario
-  
+
   public async ultimoregistrofiltro({ params }: HttpContextContract) {
     try {
 
       const idUsuario = params.idUsuario
       const idSensor = params.idSensor
-      let resultado:any=[]
-      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{$lookup: {
+      let resultado: any = []
+      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{
+        $lookup: {
           from: 'sensoresusuarios',
           localField: 'idRU',
           foreignField: 'idRU',
           as: 'rusensor'
-         }}, {$replaceRoot: {
+        }
+      }, {
+        $lookup: {
+          from: 'sensores',
+          localField: 'idSensor',
+          foreignField: 'idSensor',
+          as: 'sensores'
+        }
+      }, {
+        $replaceRoot: {
           newRoot: {
-           $mergeObjects: [
-            {
-             $arrayElemAt: [
-              '$rusensor',
-              0
-             ]
-            },
-            '$$ROOT'
-           ]
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  '$sensores',
+                  0
+                ]
+              },
+              '$$ROOT'
+            ]
           }
-         }}, {$unwind: {
+        }
+      }, {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: [
+              {
+                $arrayElemAt: [
+                  '$rusensor',
+                  0
+                ]
+              },
+              '$$ROOT'
+            ]
+          }
+        }
+      }, {
+        $unwind: {
           path: '$rusensor',
           preserveNullAndEmptyArrays: false
-         }}, {$project: {
-          rusensor: 0
-         }}, {$sort: {
+        }
+      }, {
+        $unwind: {
+          path: '$sensores',
+          preserveNullAndEmptyArrays: false
+        }
+      }, {
+        $project: {
+          rusensor: 0,
+          sensores: 0
+        }
+      }, {
+        $sort: {
           idH: -1
-         }}]).exec().then((data) => {
-          data.forEach(element => {
-            if(element.idUsuario == idUsuario && element.idSensor == idSensor)
-            {
-              //console.log(element.idUsuario)
-              resultado.push(element)
-            }
-          });//console.log(resultado)
-        }).catch((err) => {
-          console.error(err);
-        });
+        }
+      }]).exec().then((data) => {
+        data.forEach(element => {
+          if (element.idUsuario == idUsuario && element.idSensor == idSensor) {
+            console.log(element)
+            resultado.push(element)
+          }
+        });//console.log(resultado)
+      }).catch((err) => {
+        console.error(err);
+      });
       return resultado[0]
     }
     catch (error) {
