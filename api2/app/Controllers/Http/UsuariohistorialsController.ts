@@ -13,13 +13,30 @@ export default class UsuariohistorialsController {
             from: 'sensoresusuarios',
             localField: 'idRU',
             foreignField: 'idRU',
-            as: 'rusensor'
+            as: 'ussen'
+           }}, {$lookup: {
+            from: 'sensores',
+            localField: 'idSensor',
+            foreignField: 'idSensor',
+            as: 'sensores'
            }}, {$replaceRoot: {
             newRoot: {
              $mergeObjects: [
               {
                $arrayElemAt: [
-                '$rusensor',
+                '$sensores',
+                0
+               ]
+              },
+              '$$ROOT'
+             ]
+            }
+           }}, {$replaceRoot: {
+            newRoot: {
+             $mergeObjects: [
+              {
+               $arrayElemAt: [
+                '$ussen',
                 0
                ]
               },
@@ -27,12 +44,16 @@ export default class UsuariohistorialsController {
              ]
             }
            }}, {$unwind: {
-            path: '$rusensor',
+            path: '$ussen',
             preserveNullAndEmptyArrays: false
+           }}, {$unwind: {
+            path: '$sensores',
+            preserveNullAndEmptyArrays: true
            }}, {$project: {
-            rusensor: 0
+            ussen: 0,
+            sensores: 0
            }}, {$sort: {
-            idH: -1
+            idRU: -1
            }}]).exec().then((data) => {
               data.forEach(element => {
                 if(element.idUsuario == idUsuario)
