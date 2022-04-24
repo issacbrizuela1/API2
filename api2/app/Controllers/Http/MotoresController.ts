@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import schMotores from 'App/Models/Motores';
+import schHistorial from 'App/Models/scHistorial';
 
 import mongoose from 'mongoose'
 
@@ -9,7 +10,7 @@ let mongo = mongoose.connect(URL);
 export default class MotoresController {
     public async autoincrement() {
         try {
-            const preb =await mongoose.createConnection(URL).model('historialsensores', schMotores)
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores)
             let s = await preb.aggregate([{
                 $project: {
                     idH: 1,
@@ -34,7 +35,6 @@ export default class MotoresController {
         const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores)
         let idd = await this.autoincrement()
         let id = (await idd) + 1
-        if (id == "" || id == null || id == "Nan" || id == 0 || id == undefined) { id += 1 }
         preb
             .insertMany({
                 idH: id,
@@ -50,6 +50,7 @@ export default class MotoresController {
             .catch((err) => {
                 console.log(err)
             })
+
     }
     public async prueba() {
         return "hola"

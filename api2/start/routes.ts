@@ -57,3 +57,6 @@ Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')
 Route.post('insertarKy_031', 'Ky_031sController.insertarKy_031')
 Route.post('insertarMotores', 'MotoresController.insertarMotores')
 Route.post('insertarMPU6050', 'Mpu6050sController.insertarMPU6050')
+
+//pruebas autoincrement
+Route.get('autoin', 'MotoresController.autoincrement')
