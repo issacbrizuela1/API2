@@ -1,4 +1,4 @@
-// import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import schHC_SR04 from 'App/Models/HC_SR04';
 import mongoose from 'mongoose'
@@ -49,7 +49,164 @@ export default class HcSr04sController {
                 console.log(err)
             })
     }
+    public async ultimoregistroHcSr04({ params }: HttpContextContract) {
+        try {
+    
+          const idUsuario = params.idUsuario
+          const idSensor = params.idSensor
+          let resultado: any = []
+          const preb = await mongoose.createConnection(URL).model('historialsensores', schHC_SR04).aggregate([{$lookup: {
+            from: 'sensoresusuarios',
+            localField: 'idRU',
+            foreignField: 'idRU',
+            as: 'ussen'
+           }}, {$lookup: {
+            from: 'sensores',
+            localField: 'idSensor',
+            foreignField: 'idSensor',
+            as: 'sensores'
+           }}, {$replaceRoot: {
+            newRoot: {
+             $mergeObjects: [
+              {
+               $arrayElemAt: [
+                '$sensores',
+                0
+               ]
+              },
+              '$$ROOT'
+             ]
+            }
+           }}, {$replaceRoot: {
+            newRoot: {
+             $mergeObjects: [
+              {
+               $arrayElemAt: [
+                '$ussen',
+                0
+               ]
+              },
+              '$$ROOT'
+             ]
+            }
+           }}, {$unwind: {
+            path: '$ussen',
+            preserveNullAndEmptyArrays: false
+           }}, {$unwind: {
+            path: '$sensores',
+            preserveNullAndEmptyArrays: true
+           }}, {$project: {
+            ussen: 0,
+            sensores: 0
+           }}, {$match: {
+            idSensor: 2
+           }}, {$sort: {
+            idRU: -1
+           }}, {$limit: 1}]).exec().then((data) => {
+            data.forEach(element => {
+              if (element.idUsuario == idUsuario) {
+                console.log(element)
+                resultado.push(element)
+              }
+            });//console.log(resultado)
+          }).catch((err) => {
+            console.error(err);
+          });
+          return resultado[0]
+        }
+        catch (error) {
+          return error
+        }
+      }
     public async prueba() {
         return "hola"
+    }
+
+    public async mostrartodoHcSr04({ params }: HttpContextContract) {
+        try {
+
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schHC_SR04).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 2
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                  if (element.idUsuario == idUsuario) {
+                    console.log(element)
+                    resultado.push(element)
+                  }
+                });
+              }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
+        }
     }
 }

@@ -53,7 +53,184 @@ export default class Dht11sController {
                 console.log(err)
             })
     }
+
+    public async ultimoregistroDHT11({ params }: HttpContextContract) {
+        try {
+
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schDHT11M).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 1
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                    if (element.idUsuario == idUsuario) {
+                        console.log(element)
+                        resultado.push(element)
+                    }
+                });//console.log(resultado)
+            }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
+        }
+    }
+
     public async prueba() {
         return "hola"
+    }
+
+    public async mostrartodoDHT11({ params }: HttpContextContract) {
+        try {
+
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schDHT11M).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
+                    }
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 1
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                  if (element.idUsuario == idUsuario) {
+                    console.log(element)
+                    resultado.push(element)
+                  }
+                });
+              }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
+        }
     }
 }

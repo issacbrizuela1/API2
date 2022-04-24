@@ -51,12 +51,25 @@ Route.get('misSensores/:id', 'UsuariosensorsController.sensoresquetieneelusuario
 Route.get('mostrarHistorial', 'HistorialsController.getHistorial')
 Route.get('filtroultimoregistro/:idUsuario/:idSensor', 'HistorialsController.ultimoregistrofiltro')
 Route.get('historialbyuser/:id', 'UsuariohistorialsController.getHistorialbyid')
-//sensores
+//sensores registro
 Route.post('insertarDHT11', 'Dht11sController.insertarDHT11')
 Route.post('insertarHcSr04', 'HcSr04sController.insertarHcSr04')
 Route.post('insertarKy_031', 'Ky_031sController.insertarKy_031')
 Route.post('insertarMotores', 'MotoresController.insertarMotores')
 Route.post('insertarMPU6050', 'Mpu6050sController.insertarMPU6050')
-
+//sensores mostrar   ultimoregistroKy_031
+Route.get('mostrarmiDht11/:idUsuario', 'Dht11sController.ultimoregistroDHT11')
+Route.get('mostrarmiHcSr04/:idUsuario', 'HcSr04sController.ultimoregistroHcSr04') 
+Route.get('mostrarmiKy_031/:idUsuario', 'Ky_031sController.ultimoregistroKy_031')
+Route.get('mostrarmiMotore/:idUsuario', 'MotoresController.ultimoregistroMotor')
+Route.get('mostrarmiServo/:idUsuario', 'MotoresController.ultimoregistroServo')
+Route.get('mostrarmiMPU6050/:idUsuario', 'Mpu6050sController.ultimoregistroMPU6050')
+//Historial sensores 
+Route.get('mostrartodDht11/:idUsuario', 'Dht11sController.mostrartodoDHT11')
+Route.get('mostrartodHcSr04/:idUsuario', 'HcSr04sController.mostrartodoHcSr04')
+Route.get('mostrartodKy_031/:idUsuario', 'Ky_031sController.mostrartodoKy_031')
+Route.get('mostrartodMotore/:idUsuario', 'MotoresController.mostrartodoMotor')
+Route.get('mostrartodServo/:idUsuario', 'MotoresController.mostrartodosServo')
+Route.get('mostrartodMPU6050/:idUsuario', 'Mpu6050sController.mostrartodoMPU6050')
 //pruebas autoincrement
 Route.get('autoin', 'MotoresController.autoincrement')
