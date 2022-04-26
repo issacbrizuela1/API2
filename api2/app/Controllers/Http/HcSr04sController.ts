@@ -101,7 +101,7 @@ export default class HcSr04sController {
            }}, {$match: {
             idSensor: 2
            }}, {$sort: {
-            idRU: -1
+            idH: -1
            }}, {$limit: 1}]).exec().then((data) => {
             data.forEach(element => {
               if (element.idUsuario == idUsuario) {

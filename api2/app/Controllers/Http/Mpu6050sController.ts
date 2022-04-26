@@ -124,7 +124,7 @@ export default class Mpu6050sController {
                 }
             }, {
                 $sort: {
-                    idRU: -1
+                    idH: -1
                 }
             }, { $limit: 1 }]).exec().then((data) => {
                 data.forEach(element => {

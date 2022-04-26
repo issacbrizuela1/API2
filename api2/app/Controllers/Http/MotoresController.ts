@@ -121,7 +121,7 @@ export default class MotoresController {
                 }
             }, {
                 $sort: {
-                    idRU: -1
+                    idH: -1
                 }
             }, { $limit: 1 }]).exec().then((data) => {
                 data.forEach(element => {

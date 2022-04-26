@@ -104,7 +104,7 @@ export default class Ky_031sController {
            }}, {$match: {
             idSensor: 3
            }}, {$sort: {
-            idRU: -1
+            idH: -1
            }}, {$limit: 1}]).exec().then((data) => {
             data.forEach(element => {
               if (element.idUsuario == idUsuario) {
