@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 import schDHT11M from 'App/Models/DHT11'
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-
 export default class Dht11sController {
     public async autoincrement() {
         try {
@@ -123,7 +122,7 @@ export default class Dht11sController {
                 }
             }, {
                 $sort: {
-                    idRU: -1
+                    idH: -1
                 }
             }, { $limit: 1 }]).exec().then((data) => {
                 data.forEach(element => {
