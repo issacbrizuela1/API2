@@ -53,7 +53,7 @@ export default class UsuariohistorialsController {
             ussen: 0,
             sensores: 0
            }}, {$sort: {
-            idRU: -1
+            idH: -1
            }}]).exec().then((data) => {
               data.forEach(element => {
                 if(element.idUsuario == idUsuario)
