@@ -7,6 +7,18 @@ import schSensorusuario from 'App/Models/scSensorUsuario';
 let URL = Env.get('MONGO_URL');
 let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
 export default class SensorsController {
+  public async guardarMongo({request,response})
+  {
+    const trigger=request.input('trigger')
+    const echo= request.input('echo')
+    try {
+      await mongoose.connect(URL)
+      response=new SensorM.schSensor({})
+    } catch (error) {
+      
+    }
+  }
+
   //EXTRAS
   public async autoincrementSEN() {
     try {

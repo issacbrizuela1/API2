@@ -23,7 +23,11 @@ export default class HistorialsController {
     }).catch((err) => {
       console.error(err);
     });
-    return resultado
+    return {
+      status:true,
+      message:"Se trajo los datos correctamente",
+      data:resultado
+    }
   }
 
   //verificar que sennsor pertenese al usuario
