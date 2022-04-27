@@ -1,10 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
-let URL2 = Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 import schMPU6050 from "App/Models/MPU6050"
 
 export default class Mpu6050sController {

@@ -3,10 +3,8 @@ import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import SensorUsuarioM from 'App/Models/SensorUsuario'
 //import { DateTime, Zone } from 'luxon'
-let URL2=Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class UsuariosController {
     //EXTRAS
 

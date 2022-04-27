@@ -2,10 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import schSensorusuario from 'App/Models/scSensorUsuario';
-let URL2 = Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class UsuariosensorsController {
   public async sensoresquetieneelusuario({ params, request, response }: HttpContextContract) {
     try {

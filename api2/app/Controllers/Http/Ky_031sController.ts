@@ -2,10 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Env from '@ioc:Adonis/Core/Env'
 import schKY_031 from 'App/Models/KY_031';
 import mongoose from 'mongoose'
-let URL2=Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class Ky_031sController {
     public async autoincrement() {
         try {
@@ -31,7 +29,7 @@ export default class Ky_031sController {
             }
         } catch (error) {
             try {
-                const preb = mongoose.createConnection(URL2).model('historialsensores', schKY_031)
+                const preb = mongoose.createConnection(URL).model('historialsensores', schKY_031)
                 let s = await preb.aggregate([{
                     $project: {
                         idH: 1,
@@ -76,7 +74,7 @@ export default class Ky_031sController {
             })
     } catch (error) {
         const datos = request.all()
-        const preb = (await mongo2).model('historialsensores', schKY_031)
+        const preb = (await mongo).model('historialsensores', schKY_031)
         let idd = await this.autoincrement()
         let id = (await idd) + 1
         if (id == "" || id == null || id == "Nan" || id == 0 || id == undefined) { id += 1 }
@@ -172,7 +170,7 @@ export default class Ky_031sController {
                 const idUsuario = params.idUsuario
                 const idSensor = params.idSensor
                 let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schKY_031).aggregate([{$lookup: {
+                const preb = await mongoose.createConnection(URL).model('historialsensores', schKY_031).aggregate([{$lookup: {
                   from: 'sensoresusuarios',
                   localField: 'idRU',
                   foreignField: 'idRU',
@@ -328,7 +326,7 @@ export default class Ky_031sController {
                 const idUsuario = params.idUsuario
                 const idSensor = params.idSensor
                 let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schKY_031).aggregate([{
+                const preb = await mongoose.createConnection(URL).model('historialsensores', schKY_031).aggregate([{
                     $lookup: {
                         from: 'sensoresusuarios',
                         localField: 'idRU',

@@ -3,9 +3,7 @@ import Env from '@ioc:Adonis/Core/Env'
 import schHC_SR04 from 'App/Models/HC_SR04';
 import mongoose from 'mongoose'
 let URL = Env.get('MONGO_URL')
-let URL2 = Env.get('MONGO_URL2')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class HcSr04sController {
     public async autoincrement() {
 
@@ -235,7 +233,7 @@ export default class HcSr04sController {
                 const idUsuario = params.idUsuario
                 const idSensor = params.idSensor
                 let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schHC_SR04).aggregate([{
+                const preb = await mongoose.createConnection(URL).model('historialsensores', schHC_SR04).aggregate([{
                     $lookup: {
                         from: 'sensoresusuarios',
                         localField: 'idRU',

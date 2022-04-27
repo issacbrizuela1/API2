@@ -4,10 +4,8 @@ import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import schHistorial from 'App/Models/scHistorial';
 import HistorialM from 'App/Models/Historial';
-let URL2=Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class HistorialsController {
 
   //mostrar
@@ -32,7 +30,7 @@ export default class HistorialsController {
       }
     } catch (error) {
       let resultado: any = []
-      const preb = await mongoose.createConnection(URL2).model('historialsensores', schHistorial).aggregate([{$sort: {
+      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{$sort: {
         Fechacreacion: -1
        }}]).exec().then((data) => {
         data.forEach(element => { {
@@ -142,7 +140,7 @@ export default class HistorialsController {
       const idUsuario = params.idUsuario
       const idSensor = params.idSensor
       let resultado: any = []
-      const preb = await mongoose.createConnection(URL2).model('historialsensores', schHistorial).aggregate([{
+      const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{
         $lookup: {
           from: 'sensoresusuarios',
           localField: 'idRU',
@@ -244,7 +242,7 @@ export default class HistorialsController {
      return resultado
   } catch (error) {
     let resultado: any = []
-    await mongoose.createConnection(URL2).model('historialsensores', schHistorial).aggregate
+    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
     ([{$match: {
       idSensor: 2
      }}, {$sort: {
@@ -289,7 +287,7 @@ export default class HistorialsController {
      return resultado
   } catch (error) {
     let resultado: any = []
-    await mongoose.createConnection(URL2).model('historialsensores', schHistorial).aggregate
+    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
     ([{$match: {
       idSensor: 2
      }}, {$sort: {

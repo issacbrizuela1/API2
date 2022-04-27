@@ -4,10 +4,8 @@ import mongoose from 'mongoose'
 import SensorM from 'App/Models/Sensor'
 import schSensor from 'App/Models/scSensor';
 import schSensorusuario from 'App/Models/scSensorUsuario';
-let URL2=Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class SensorsController {
   //EXTRAS
   public async autoincrementSEN() {

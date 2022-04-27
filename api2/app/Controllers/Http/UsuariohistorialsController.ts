@@ -2,10 +2,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import schHistorial from "App/Models/scHistorial";
 import mongoose from 'mongoose';
 import Env from '@ioc:Adonis/Core/Env'
-let URL2 = Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class UsuariohistorialsController {
   public async getHistorialbyid({ params, request }: HttpContextContract) {
 

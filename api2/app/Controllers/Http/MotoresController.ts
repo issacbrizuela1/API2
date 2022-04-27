@@ -4,11 +4,8 @@ import schMotores from 'App/Models/Motores';
 import schHistorial from 'App/Models/scHistorial';
 
 import mongoose from 'mongoose'
-
-let URL2 = Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL2);
 export default class MotoresController {
     public async autoincrement() {
         try {
@@ -34,7 +31,7 @@ export default class MotoresController {
             }
         } catch (error) {
             try {
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores)
+                const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores)
                 let s = await preb.aggregate([{
                     $project: {
                         idH: 1,
@@ -79,7 +76,7 @@ export default class MotoresController {
 
         } catch (error) {
             const datos = request.all()
-            const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores)
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores)
             let idd = await this.autoincrement()
             let id = (await idd) + 1
             preb
@@ -371,7 +368,7 @@ export default class MotoresController {
             const idUsuario = params.idUsuario
             const idSensor = params.idSensor
             let resultado: any = []
-            const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
                 $lookup: {
                     from: 'sensoresusuarios',
                     localField: 'idRU',
