@@ -271,12 +271,13 @@ export default class HistorialsController {
     await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
     ([{$match: {
       idSensor: 2
+     }}, {$project: {
+      Temperatura: 1,
+      Humedad: 1,
+      Fechacreacion: 1
      }}, {$sort: {
       Fechacreacion: -1
-     }}, {$limit: 10}, {$project: {
-      Distacia: 1,
-      Fechacreacion: 1
-     }}]).exec().then((data) => {
+     }}, {$limit: 10}]).exec().then((data) => {
       data.forEach(element => { {
           console.log(element)
           resultado.push(element)
