@@ -220,15 +220,15 @@ export default class HistorialsController {
   }
   public async gethistorialDht11({})
   {
-  try {
     let resultado: any = []
     await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
     ([{$match: {
-      idSensor: 2
+      idSensor: 1
      }}, {$sort: {
       Fechacreacion: -1
      }}, {$limit: 10}, {$project: {
-      Distacia: 1,
+      Temperatura: 1,
+      Humedad:1,
       Fechacreacion: 1
      }}]).exec().then((data) => {
       data.forEach(element => { {
@@ -240,38 +240,15 @@ export default class HistorialsController {
       console.error(err);
     });
      return resultado
-  } catch (error) {
-    let resultado: any = []
-    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
-    ([{$match: {
-      idSensor: 2
-     }}, {$sort: {
-      Fechacreacion: -1
-     }}, {$limit: 10}, {$project: {
-      Distacia: 1,
-      Fechacreacion: 1
-     }}]).exec().then((data) => {
-      data.forEach(element => { {
-          console.log(element)
-          resultado.push(element)
-        }
-      });//console.log(resultado)
-    }).catch((err) => {
-      console.error(err);
-    });
-     return resultado
-  }
   }
   public async gethistorialultrasonico({})
   {
-  try {
     let resultado: any = []
     await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
     ([{$match: {
       idSensor: 2
      }}, {$project: {
-      Temperatura: 1,
-      Humedad: 1,
+      Distancia: 1,
       Fechacreacion: 1
      }}, {$sort: {
       Fechacreacion: -1
@@ -285,27 +262,6 @@ export default class HistorialsController {
       console.error(err);
     });
      return resultado
-  } catch (error) {
-    let resultado: any = []
-    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
-    ([{$match: {
-      idSensor: 2
-     }}, {$sort: {
-      Fechacreacion: -1
-     }}, {$limit: 10}, {$project: {
-      Distacia: 1,
-      Fechacreacion: 1
-     }}]).exec().then((data) => {
-      data.forEach(element => { {
-          console.log(element)
-          resultado.push(element)
-        }
-      });//console.log(resultado)
-    }).catch((err) => {
-      console.error(err);
-    });
-     return resultado
-  }
   }
   
 }
