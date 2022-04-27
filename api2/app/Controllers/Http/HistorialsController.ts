@@ -11,15 +11,19 @@ export default class HistorialsController {
 
   //mostrar
   public async getHistorial({ request }: HttpContextContract) {
-    let datos = request.all()
-    const preb = HistorialM.HistorialM.find().exec()
-      .then((schHistorial) => {
-        return schHistorial
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-    return preb
+    let resultado: any = []
+    const preb = await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate([{$sort: {
+      Fechacreacion: -1
+     }}]).exec().then((data) => {
+      data.forEach(element => { {
+          console.log(element)
+          resultado.push(element)
+        }
+      });//console.log(resultado)
+    }).catch((err) => {
+      console.error(err);
+    });
+    return resultado
   }
 
   //verificar que sennsor pertenese al usuario
@@ -137,9 +141,12 @@ export default class HistorialsController {
     ([{$match: {
       idSensor: 2
      }}, {$project: {
-      Distancia: 1,
+      Temperatura: 1,
+      Humedad: 1,
       Fechacreacion: 1
-     }}]).exec().then((data) => {
+     }}, {$sort: {
+      Fechacreacion: -1
+     }}, {$limit: 10}]).exec().then((data) => {
       data.forEach(element => { {
           console.log(element)
           resultado.push(element)
@@ -150,4 +157,5 @@ export default class HistorialsController {
     });
      return resultado
   }
+  
 }
