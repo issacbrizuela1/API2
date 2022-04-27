@@ -232,4 +232,5 @@ export default class Dht11sController {
             return error
         }
     }
+    
 }

@@ -73,3 +73,7 @@ Route.get('mostrartodServo/:idUsuario', 'MotoresController.mostrartodosServo')
 Route.get('mostrartodMPU6050/:idUsuario', 'Mpu6050sController.mostrartodoMPU6050')
 //pruebas autoincrement
 Route.get('autoin', 'MotoresController.autoincrement')
+
+//prueba
+Route.get('dht11','HistorialsController.gethistorialDht11')
+Route.get('ultrasonico','HistorialsController.gethistorialultrasonico')

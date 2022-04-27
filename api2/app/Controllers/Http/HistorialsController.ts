@@ -107,4 +107,45 @@ export default class HistorialsController {
       return error
     }
   }
+  public async gethistorialDht11({})
+  {
+    let resultado: any = []
+    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
+    ([{$match: {
+      idSensor: 1
+     }}, {$project: {
+      Temperatura: 1,
+      Humedad: 1,
+      Fechacreacion: 1
+     }}]).exec().then((data) => {
+      data.forEach(element => { {
+          console.log(element)
+          resultado.push(element)
+        }
+      });//console.log(resultado)
+    }).catch((err) => {
+      console.error(err);
+    });
+     return resultado
+  }
+  public async gethistorialultrasonico({})
+  {
+    let resultado: any = []
+    await mongoose.createConnection(URL).model('historialsensores', schHistorial).aggregate
+    ([{$match: {
+      idSensor: 2
+     }}, {$project: {
+      Distancia: 1,
+      Fechacreacion: 1
+     }}]).exec().then((data) => {
+      data.forEach(element => { {
+          console.log(element)
+          resultado.push(element)
+        }
+      });//console.log(resultado)
+    }).catch((err) => {
+      console.error(err);
+    });
+     return resultado
+  }
 }
