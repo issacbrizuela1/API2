@@ -192,72 +192,56 @@ export default class MotoresController {
             const idUsuario = params.idUsuario
             const idSensor = params.idSensor
             let resultado: any = []
-            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
-                $lookup: {
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate(
+                [{$lookup: {
                     from: 'sensoresusuarios',
                     localField: 'idRU',
                     foreignField: 'idRU',
                     as: 'ussen'
-                }
-            }, {
-                $lookup: {
+                   }}, {$lookup: {
                     from: 'sensores',
                     localField: 'idSensor',
                     foreignField: 'idSensor',
                     as: 'sensores'
-                }
-            }, {
-                $replaceRoot: {
+                   }}, {$replaceRoot: {
                     newRoot: {
-                        $mergeObjects: [
-                            {
-                                $arrayElemAt: [
-                                    '$sensores',
-                                    0
-                                ]
-                            },
-                            '$$ROOT'
-                        ]
+                     $mergeObjects: [
+                      {
+                       $arrayElemAt: [
+                        '$sensores',
+                        0
+                       ]
+                      },
+                      '$$ROOT'
+                     ]
                     }
-                }
-            }, {
-                $replaceRoot: {
+                   }}, {$replaceRoot: {
                     newRoot: {
-                        $mergeObjects: [
-                            {
-                                $arrayElemAt: [
-                                    '$ussen',
-                                    0
-                                ]
-                            },
-                            '$$ROOT'
-                        ]
+                     $mergeObjects: [
+                      {
+                       $arrayElemAt: [
+                        '$ussen',
+                        0
+                       ]
+                      },
+                      '$$ROOT'
+                     ]
                     }
-                }
-            }, {
-                $unwind: {
+                   }}, {$unwind: {
                     path: '$ussen',
                     preserveNullAndEmptyArrays: false
-                }
-            }, {
-                $unwind: {
+                   }}, {$unwind: {
                     path: '$sensores',
                     preserveNullAndEmptyArrays: true
-                }
-            }, {
-                $project: {
+                   }}, {$project: {
                     ussen: 0,
                     sensores: 0
-                }
-            }, {
-                $match: {
+                   }}, {$match: {
                     idSensor: 6
-                }
-            }, {
-                $sort: {
-                    idRU: -1
-                }
-            }, { $limit: 1 }]).exec().then((data) => {
+                   }}, {$sort: {
+                    idH: -1
+                   }}, {$limit: 1}]
+            ).exec().then((data) => {
                 data.forEach(element => {
                     if (element.idUsuario == idUsuario) {
                         console.log(element)
