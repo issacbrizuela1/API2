@@ -117,6 +117,8 @@ export default class HistorialsController {
       Temperatura: 1,
       Humedad: 1,
       Fechacreacion: 1
+     }}, {$sort: {
+      Fechacreacion: -1
      }}, {$limit: 10}]).exec().then((data) => {
       data.forEach(element => { {
           console.log(element)
