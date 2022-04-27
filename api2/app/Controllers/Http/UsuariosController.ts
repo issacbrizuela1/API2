@@ -3,8 +3,10 @@ import Env from '@ioc:Adonis/Core/Env'
 import mongoose from 'mongoose'
 import SensorUsuarioM from 'App/Models/SensorUsuario'
 //import { DateTime, Zone } from 'luxon'
-let URL = Env.get('MONGO_URL2');
-let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
+let URL2=Env.get('MONGO_URL2')
+let URL = Env.get('MONGO_URL')
+let mongo = mongoose.connect(URL);
+let mongo2 = mongoose.connect(URL2);
 export default class UsuariosController {
     //EXTRAS
 
@@ -35,18 +37,33 @@ export default class UsuariosController {
     }
     //CREAR
     public async crearusuarioSensor({ request, response }) {
-        let datos = request.all()
-        await mongoose.connect(URL)
-        let autoinc = this.autoincrementSEN()
-        let id = await autoinc + 1
-        if (id == "NaN" || id == null|| id == 0) { id += 1 };
-        response = new SensorUsuarioM.SensorUsuarioM({
-            idRU:id,
-            idUsuario:datos.idUsuario,
-            idSensor:datos.idSensor
-      })
-        response.save()
-        return response
+        try {
+            let datos = request.all()
+            await mongoose.connect(URL)
+            let autoinc = this.autoincrementSEN()
+            let id = await autoinc + 1
+            if (id == "NaN" || id == null|| id == 0) { id += 1 };
+            response = new SensorUsuarioM.SensorUsuarioM({
+                idRU:id,
+                idUsuario:datos.idUsuario,
+                idSensor:datos.idSensor
+          })
+            response.save()
+            return response
+        } catch (error) {
+            let datos = request.all()
+            await mongoose.connect(URL2)
+            let autoinc = this.autoincrementSEN()
+            let id = await autoinc + 1
+            if (id == "NaN" || id == null|| id == 0) { id += 1 };
+            response = new SensorUsuarioM.SensorUsuarioM({
+                idRU:id,
+                idUsuario:datos.idUsuario,
+                idSensor:datos.idSensor
+          })
+            response.save()
+            return response
+        }
     }
     //mostrar
     public async getusuarioSensores({ request, response }: HttpContextContract) {
@@ -86,5 +103,4 @@ export default class UsuariosController {
             })
     }
 
-    
 }

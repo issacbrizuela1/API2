@@ -4,21 +4,11 @@ import mongoose from 'mongoose'
 import SensorM from 'App/Models/Sensor'
 import schSensor from 'App/Models/scSensor';
 import schSensorusuario from 'App/Models/scSensorUsuario';
-let URL = Env.get('MONGO_URL');
-let mongo = mongoose.connect(URL, { maxIdleTimeMS: 1000 });
+let URL2=Env.get('MONGO_URL2')
+let URL = Env.get('MONGO_URL')
+let mongo = mongoose.connect(URL);
+let mongo2 = mongoose.connect(URL2);
 export default class SensorsController {
-  public async guardarMongo({request,response})
-  {
-    const trigger=request.input('trigger')
-    const echo= request.input('echo')
-    try {
-      await mongoose.connect(URL)
-      response=new SensorM.schSensor({})
-    } catch (error) {
-      
-    }
-  }
-
   //EXTRAS
   public async autoincrementSEN() {
     try {
@@ -47,37 +37,66 @@ export default class SensorsController {
   }
   //CREAR
   public async crearSensor({ request, response }) {
-    const datos = request.all()
-    await mongoose.connect(URL)
-    let autoinc = this.autoincrementSEN()
-    let id = await autoinc + 1
-    if (id == "NaN" || id == null) { id += 1 };
-    response = new SensorM.SensorM({ datos })
-    response.save()
-    return response
-
+    try {
+      const datos = request.all()
+      await mongoose.connect(URL)
+      let autoinc = this.autoincrementSEN()
+      let id = await autoinc + 1
+      if (id == "NaN" || id == null) { id += 1 };
+      response = new SensorM.SensorM({ datos })
+      response.save()
+      return response
+    } catch (error) {
+      const datos = request.all()
+      await mongoose.connect(URL2)
+      let autoinc = this.autoincrementSEN()
+      let id = await autoinc + 1
+      if (id == "NaN" || id == null) { id += 1 };
+      response = new SensorM.SensorM({ datos })
+      response.save()
+      return response
+    }
   }
   //mostrar
   public async getSensoresusuario() {
     //poner filtro para usuario logueado
-    const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({}).exec()
-    return resp
+    try {
+      const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({}).exec()
+      return resp
+    } catch (error) {
+      const resp = await mongoose.createConnection(URL2).model('sensoresusuarios', schSensorusuario).find({}).exec()
+      return resp
+    }
     
   }
   //mostrar
   public async getSensoresA({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({}).exec()
-    return {
-      status:true,
-      message:"Se trajo los datos correctamente",
-      data:resp
+    try {
+      const resp = await mongoose.createConnection(URL).model('sensores', schSensor).find({}).exec()
+      return {
+        status:true,
+        message:"Se trajo los datos correctamente",
+        data:resp
+      }
+    } catch (error) {
+      const resp = await mongoose.createConnection(URL2).model('sensores', schSensor).find({}).exec()
+      return {
+        status:true,
+        message:"Se trajo los datos correctamente",
+        data:resp
+      }
     }
   }
   public async getSensores({  response }: HttpContextContract) {
     //poner filtro para usuario logueado
-    const resp = SensorM.SensorM.find({}).exec()
-    return resp
+    try {
+      const resp = SensorM.SensorM.find({}).exec()
+      return resp
+    } catch (error) {
+      const resp = SensorM.SensorM.find({}).exec()
+      return resp
+    }
     
   }
   //verificar que sennsor pertenese al usuario
