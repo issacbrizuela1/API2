@@ -5,7 +5,7 @@ import schDHT11M from 'App/Models/DHT11'
 let URL = Env.get('MONGO_URL')
 let URL2 = Env.get('MONGO_URL2')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL);
+let mongo2 = mongoose.connect(URL2);
 
 export default class Dht11sController {
     public async autoincrement() {

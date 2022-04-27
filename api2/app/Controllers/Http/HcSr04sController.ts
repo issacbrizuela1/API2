@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 let URL = Env.get('MONGO_URL')
 let URL2 = Env.get('MONGO_URL2')
 let mongo = mongoose.connect(URL);
-let mongo2 = mongoose.connect(URL);
+let mongo2 = mongoose.connect(URL2);
 export default class HcSr04sController {
     public async autoincrement() {
 
