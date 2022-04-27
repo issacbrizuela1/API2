@@ -5,7 +5,7 @@ import schHistorial from 'App/Models/scHistorial';
 
 import mongoose from 'mongoose'
 
-let URL2=Env.get('MONGO_URL2')
+let URL2 = Env.get('MONGO_URL2')
 let URL = Env.get('MONGO_URL')
 let mongo = mongoose.connect(URL);
 let mongo2 = mongoose.connect(URL2);
@@ -76,7 +76,7 @@ export default class MotoresController {
                 .catch((err) => {
                     console.log(err)
                 })
-    
+
         } catch (error) {
             const datos = request.all()
             const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores)
@@ -97,707 +97,359 @@ export default class MotoresController {
                 .catch((err) => {
                     console.log(err)
                 })
-    
+
         }
     }
     public async ultimoregistroMotor({ params }: HttpContextContract) {
+
         try {
-            try {
 
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 5
+                }
+            }, {
+                $sort: {
+                    idH: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                    if (element.idUsuario == idUsuario) {
+                        console.log(element)
+                        resultado.push(element)
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 5
-                    }
-                }, {
-                    $sort: {
-                        idH: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                        if (element.idUsuario == idUsuario) {
-                            console.log(element)
-                            resultado.push(element)
-                        }
-                    });//console.log(resultado)
-                }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            } 
-        } catch (error) {
-            try {
-
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
-                    }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 5
-                    }
-                }, {
-                    $sort: {
-                        idH: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                        if (element.idUsuario == idUsuario) {
-                            console.log(element)
-                            resultado.push(element)
-                        }
-                    });//console.log(resultado)
-                }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            } 
+                });//console.log(resultado)
+            }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
         }
     }
     public async ultimoregistroServo({ params }: HttpContextContract) {
+
         try {
-            try {
 
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 6
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                    if (element.idUsuario == idUsuario) {
+                        console.log(element)
+                        resultado.push(element)
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 6
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                        if (element.idUsuario == idUsuario) {
-                            console.log(element)
-                            resultado.push(element)
-                        }
-                    });//console.log(resultado)
-                }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            }
-        } catch (error) {
-            try {
-
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
-                    }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 6
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                        if (element.idUsuario == idUsuario) {
-                            console.log(element)
-                            resultado.push(element)
-                        }
-                    });//console.log(resultado)
-                }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            }
+                });//console.log(resultado)
+            }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
         }
     }
     public async mostrartodoMotor({ params }: HttpContextContract) {
+
         try {
-            try {
 
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 5
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                      if (element.idUsuario == idUsuario) {
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 5
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                    if (element.idUsuario == idUsuario) {
                         console.log(element)
                         resultado.push(element)
-                      }
-                    });
-                  }).catch((err) => {
-                    console.error(err);
+                    }
                 });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            }
-        } catch (error) {
-            try {
-
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
-                    }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 5
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                      if (element.idUsuario == idUsuario) {
-                        console.log(element)
-                        resultado.push(element)
-                      }
-                    });
-                  }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado[0]
-            }
-            catch (error) {
-                return error
-            }
+            }).catch((err) => {
+                console.error(err);
+            });
+            return resultado[0]
+        }
+        catch (error) {
+            return error
         }
     }
     public async mostrartodosServo({ params }: HttpContextContract) {
+        
         try {
-            try {
 
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
+            const idUsuario = params.idUsuario
+            const idSensor = params.idSensor
+            let resultado: any = []
+            const preb = await mongoose.createConnection(URL2).model('historialsensores', schMotores).aggregate([{
+                $lookup: {
+                    from: 'sensoresusuarios',
+                    localField: 'idRU',
+                    foreignField: 'idRU',
+                    as: 'ussen'
+                }
+            }, {
+                $lookup: {
+                    from: 'sensores',
+                    localField: 'idSensor',
+                    foreignField: 'idSensor',
+                    as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$sensores',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
+                }
+            }, {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            {
+                                $arrayElemAt: [
+                                    '$ussen',
+                                    0
+                                ]
+                            },
+                            '$$ROOT'
+                        ]
                     }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 6
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                      if (element.idUsuario == idUsuario) {
+                }
+            }, {
+                $unwind: {
+                    path: '$ussen',
+                    preserveNullAndEmptyArrays: false
+                }
+            }, {
+                $unwind: {
+                    path: '$sensores',
+                    preserveNullAndEmptyArrays: true
+                }
+            }, {
+                $project: {
+                    ussen: 0,
+                    sensores: 0
+                }
+            }, {
+                $match: {
+                    idSensor: 6
+                }
+            }, {
+                $sort: {
+                    idRU: -1
+                }
+            }, { $limit: 1 }]).exec().then((data) => {
+                data.forEach(element => {
+                    if (element.idUsuario == idUsuario) {
                         console.log(element)
                         resultado.push(element)
-                      }
-                    });
-                  }).catch((err) => {
-                    console.error(err);
+                    }
                 });
-                return resultado
-            }
-            catch (error) {
-                return error
-            }
-        } catch (error) {
-            try {
-
-                const idUsuario = params.idUsuario
-                const idSensor = params.idSensor
-                let resultado: any = []
-                const preb = await mongoose.createConnection(URL).model('historialsensores', schMotores).aggregate([{
-                    $lookup: {
-                        from: 'sensoresusuarios',
-                        localField: 'idRU',
-                        foreignField: 'idRU',
-                        as: 'ussen'
-                    }
-                }, {
-                    $lookup: {
-                        from: 'sensores',
-                        localField: 'idSensor',
-                        foreignField: 'idSensor',
-                        as: 'sensores'
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$sensores',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $replaceRoot: {
-                        newRoot: {
-                            $mergeObjects: [
-                                {
-                                    $arrayElemAt: [
-                                        '$ussen',
-                                        0
-                                    ]
-                                },
-                                '$$ROOT'
-                            ]
-                        }
-                    }
-                }, {
-                    $unwind: {
-                        path: '$ussen',
-                        preserveNullAndEmptyArrays: false
-                    }
-                }, {
-                    $unwind: {
-                        path: '$sensores',
-                        preserveNullAndEmptyArrays: true
-                    }
-                }, {
-                    $project: {
-                        ussen: 0,
-                        sensores: 0
-                    }
-                }, {
-                    $match: {
-                        idSensor: 6
-                    }
-                }, {
-                    $sort: {
-                        idRU: -1
-                    }
-                }, { $limit: 1 }]).exec().then((data) => {
-                    data.forEach(element => {
-                      if (element.idUsuario == idUsuario) {
-                        console.log(element)
-                        resultado.push(element)
-                      }
-                    });
-                  }).catch((err) => {
-                    console.error(err);
-                });
-                return resultado
-            }
-            catch (error) {
-                return error
-            }
+            }).catch((err) => {
+                console.error(err);
+            });
+            return resultado
+        }
+        catch (error) {
+            return error
         }
     }
 }

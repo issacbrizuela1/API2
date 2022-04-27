@@ -51,18 +51,7 @@ export default class UsuariosController {
             response.save()
             return response
         } catch (error) {
-            let datos = request.all()
-            await mongoose.connect(URL2)
-            let autoinc = this.autoincrementSEN()
-            let id = await autoinc + 1
-            if (id == "NaN" || id == null|| id == 0) { id += 1 };
-            response = new SensorUsuarioM.SensorUsuarioM({
-                idRU:id,
-                idUsuario:datos.idUsuario,
-                idSensor:datos.idSensor
-          })
-            response.save()
-            return response
+            
         }
     }
     //mostrar

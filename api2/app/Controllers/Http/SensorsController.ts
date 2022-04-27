@@ -47,14 +47,7 @@ export default class SensorsController {
       response.save()
       return response
     } catch (error) {
-      const datos = request.all()
-      await mongoose.connect(URL2)
-      let autoinc = this.autoincrementSEN()
-      let id = await autoinc + 1
-      if (id == "NaN" || id == null) { id += 1 };
-      response = new SensorM.SensorM({ datos })
-      response.save()
-      return response
+      
     }
   }
   //mostrar
@@ -64,8 +57,6 @@ export default class SensorsController {
       const resp = await mongoose.createConnection(URL).model('sensoresusuarios', schSensorusuario).find({}).exec()
       return resp
     } catch (error) {
-      const resp = await mongoose.createConnection(URL2).model('sensoresusuarios', schSensorusuario).find({}).exec()
-      return resp
     }
     
   }
@@ -80,12 +71,7 @@ export default class SensorsController {
         data:resp
       }
     } catch (error) {
-      const resp = await mongoose.createConnection(URL2).model('sensores', schSensor).find({}).exec()
-      return {
-        status:true,
-        message:"Se trajo los datos correctamente",
-        data:resp
-      }
+      
     }
   }
   public async getSensores({  response }: HttpContextContract) {
@@ -94,8 +80,7 @@ export default class SensorsController {
       const resp = SensorM.SensorM.find({}).exec()
       return resp
     } catch (error) {
-      const resp = SensorM.SensorM.find({}).exec()
-      return resp
+      
     }
     
   }
